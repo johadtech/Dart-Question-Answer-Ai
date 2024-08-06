@@ -1,0 +1,24 @@
+# Enable the rewrite engine
+RewriteEngine On
+
+# Redirect HTTP to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Remove .php extension from URLs
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php [NC,L]
+
+# Redirect requests to the actual PHP file if it exists
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php [L]
+
+# Block HTTrack
+RewriteCond %{HTTP_USER_AGENT} ^.*(HTTrack|WebCopier|WebStripper|WebWhacker|Teleport|Offline|SiteSnagger|WebCopier|SiteSucker|Wget|Downloader).*$ [NC]
+RewriteRule .* - [F,L]
+
+# Block other common web scrapers and offline browsers
+RewriteCond %{HTTP_USER_AGENT} ^.*(wget|curl|wget|python|libwww-perl|apachebench|httrack|java|php|perl|libwww|teleport|freewa|larbin|g00gle|flicky|ia_archiver|netsparker|nikto|pixray|snagit|webdav|nmap|acunetix|sqlmap|zeus|paros|appscan|hpprint|avast|winhttp|windows%-webdatacrawler|download\ acclerator|httpclient|extractorpro|webstripper|webcopier|website\ eXtractor|grabber|webdownloader|webimagesniffer|fastdownloader|webleacher|nicebot|nutch|qwantify|plukkie|yahoo!_mindset|yahoo!_searchmonkey|yandex|yeti|archive.org_bot|webshakira|domgrab|experibot|jike|cocoabot|wordpress|bingbot|msnbot|outfoxbot|robozilla|slurp|abonti|almaden|appie|asterias|baiduspider|bai2spider|becomebot|dotbot|email\ collector|grub|askjeeves|googlebot|ia_archiver|iccrawler|scrubby).*$ [NC]
+RewriteRule .* - [F,L]
